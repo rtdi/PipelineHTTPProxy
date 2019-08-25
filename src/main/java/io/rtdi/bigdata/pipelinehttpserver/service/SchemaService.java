@@ -87,7 +87,7 @@ public class SchemaService {
     public Response registerSchema(@PathParam("tenantid") String tenantid, @PathParam("schemaname") String schemaname, SchemaHandlerEntity entityin) {
 		try {
 			IPipelineServer<?, ?, ?, ?> api = WebAppController.getPipelineAPIOrFail(servletContext);
-			SchemaHandler h = api.registerSchema(new SchemaName(tenantid, schemaname), entityin.getDescription(), entityin.getKeySchema(), entityin.getValueSchema());
+			SchemaHandler h = api.getOrCreateSchema(new SchemaName(tenantid, schemaname), entityin.getDescription(), entityin.getKeySchema(), entityin.getValueSchema());
 			SchemaHandlerEntity entity = new SchemaHandlerEntity(h);
 			Index.getServerStatisticsHandler().incRegisterSchema();
 			return Response.ok(entity).build();

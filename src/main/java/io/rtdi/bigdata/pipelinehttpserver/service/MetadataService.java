@@ -23,6 +23,8 @@ import io.rtdi.bigdata.connector.pipeline.foundation.entity.ConsumerMetadataEnti
 import io.rtdi.bigdata.connector.pipeline.foundation.entity.JAXBErrorMessage;
 import io.rtdi.bigdata.connector.pipeline.foundation.entity.ProducerEntity;
 import io.rtdi.bigdata.connector.pipeline.foundation.entity.ProducerMetadataEntity;
+import io.rtdi.bigdata.connector.pipeline.foundation.entity.ServiceEntity;
+import io.rtdi.bigdata.connector.pipeline.foundation.entity.ServiceMetadataEntity;
 import io.rtdi.bigdata.pipelinehttpserver.WebAppController;
 
 @Path("/")
@@ -115,6 +117,62 @@ public class MetadataService {
 			IPipelineServer<?, ?, ?, ?> api = WebAppController.getPipelineAPIOrFail(servletContext);
 			api.removeConsumerMetadata(tenantid, consumername);
 			return Response.ok().build();
+		} catch (Exception e) {
+			logger.info("Calling the Restful service {} ran into an error", servletContext.getContextPath(), e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new JAXBErrorMessage(e)).build();
+		}
+	}
+
+	@GET
+	@Path("/{tenantid}/meta/service")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getServiceMetadata(@PathParam("tenantid") String tenantid) {
+		try {
+			IPipelineServer<?, ?, ?, ?> api = WebAppController.getPipelineAPIOrFail(servletContext);
+			ServiceMetadataEntity entity = api.getServiceMetadata(tenantid);
+			return Response.ok(entity).build();
+		} catch (Exception e) {
+			logger.info("Calling the Restful service {} ran into an error", servletContext.getContextPath(), e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new JAXBErrorMessage(e)).build();
+		}
+	}
+
+	@POST
+	@Path("/{tenantid}/meta/service")
+	@Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addServiceMetadata(@PathParam("tenantid") String tenantid, ServiceEntity service) {
+		try {
+			IPipelineServer<?, ?, ?, ?> api = WebAppController.getPipelineAPIOrFail(servletContext);
+			api.addServiceMetadata(tenantid, service);
+			return Response.ok().build();
+		} catch (Exception e) {
+			logger.info("Calling the Restful service {} ran into an error", servletContext.getContextPath(), e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new JAXBErrorMessage(e)).build();
+		}
+	}
+
+	@DELETE
+	@Path("/{tenantid}/meta/service/{servicename}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response removeServiceMetadata(@PathParam("tenantid") String tenantid, @PathParam("servicename") String servicename) {
+		try {
+			IPipelineServer<?, ?, ?, ?> api = WebAppController.getPipelineAPIOrFail(servletContext);
+			api.removeServiceMetadata(tenantid, servicename);
+			return Response.ok().build();
+		} catch (Exception e) {
+			logger.info("Calling the Restful service {} ran into an error", servletContext.getContextPath(), e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new JAXBErrorMessage(e)).build();
+		}
+	}
+
+	@GET
+	@Path("/{tenantid}/meta/apitarget")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAPITarget(@PathParam("tenantid") String tenantid) {
+		try {
+			IPipelineServer<?, ?, ?, ?> api = WebAppController.getPipelineAPIOrFail(servletContext);
+			return Response.ok(api.getConnectionLabel()).build();
 		} catch (Exception e) {
 			logger.info("Calling the Restful service {} ran into an error", servletContext.getContextPath(), e);
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity(new JAXBErrorMessage(e)).build();

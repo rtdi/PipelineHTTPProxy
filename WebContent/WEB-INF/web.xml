@@ -11,10 +11,12 @@
 	</welcome-file-list>
 	<servlet>
 		<servlet-name>jersey-servlet</servlet-name>
-		<servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+		<servlet-class>org.glassfish.jersey.servlet.ServletContainer
+		</servlet-class>
 		<init-param>
 			<param-name>javax.ws.rs.Application</param-name>
-			<param-value>io.rtdi.bigdata.pipelinehttpserver.servlet.JerseyApplication</param-value>
+			<param-value>io.rtdi.bigdata.pipelinehttpserver.servlet.JerseyApplication
+			</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -39,4 +41,11 @@
 		<role-name>pipelineuser</role-name>
 	</security-role>
 
+	<session-config>
+		<tracking-mode>COOKIE</tracking-mode>
+		<cookie-config>
+			<http-only>true</http-only>
+			<secure>true</secure>
+		</cookie-config>
+	</session-config>
 </web-app>

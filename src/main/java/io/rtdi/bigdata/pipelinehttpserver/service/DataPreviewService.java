@@ -18,9 +18,9 @@ import org.apache.logging.log4j.Logger;
 
 import io.rtdi.bigdata.connector.pipeline.foundation.IPipelineServer;
 import io.rtdi.bigdata.connector.pipeline.foundation.TopicName;
+import io.rtdi.bigdata.connector.pipeline.foundation.TopicPayload;
 import io.rtdi.bigdata.connector.pipeline.foundation.entity.JAXBErrorMessage;
-import io.rtdi.bigdata.connector.pipeline.foundation.entity.TopicPayload;
-import io.rtdi.bigdata.connector.pipeline.foundation.entity.TopicPayloadData;
+import io.rtdi.bigdata.connector.pipeline.foundation.entity.TopicPayloadBinaryData;
 import io.rtdi.bigdata.pipelinehttpserver.WebAppController;
 import io.rtdi.bigdata.pipelinehttpserver.servlet.Index;
 
@@ -41,7 +41,7 @@ public class DataPreviewService {
 		try {
 			IPipelineServer<?, ?, ?, ?> api = WebAppController.getPipelineAPIOrFail(servletContext);
 			List<TopicPayload> data = api.getLastRecords(new TopicName(tenantid, topicname), count);
-			TopicPayloadData entity = new TopicPayloadData(data);
+			TopicPayloadBinaryData entity = new TopicPayloadBinaryData(data, api);
 			Index.getServerStatisticsHandler().incDataPreview();
 			return Response.ok(entity).build();
 		} catch (Exception e) {
@@ -57,7 +57,7 @@ public class DataPreviewService {
 		try {
 			IPipelineServer<?, ?, ?, ?> api = WebAppController.getPipelineAPIOrFail(servletContext);
 			List<TopicPayload> data = api.getLastRecords(new TopicName(tenantid, topicname), time);
-			TopicPayloadData entity = new TopicPayloadData(data);
+			TopicPayloadBinaryData entity = new TopicPayloadBinaryData(data, api);
 			Index.getServerStatisticsHandler().incDataPreview();
 			return Response.ok(entity).build();
 		} catch (Exception e) {
